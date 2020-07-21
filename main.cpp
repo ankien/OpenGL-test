@@ -77,11 +77,13 @@ int main() {
 
     GLenum status = glewInit();
     
+    Shader shader("./shaders/myShader");
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
     bool exit = false;
     SDL_Event event;
     while(!exit){ // draw loop
-        while(SDL_PollEvent(&event)) {
+        glUseProgram(shader.program);
+        while(SDL_PollEvent(&event)) { // update display
             glClear(GL_COLOR_BUFFER_BIT);
             SDL_GL_SwapWindow(window);
 

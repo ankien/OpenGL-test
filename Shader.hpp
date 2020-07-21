@@ -24,16 +24,36 @@ struct Shader {
         return output;
     }
 
-    Shader(std::string& fileName) {
+    static unsigned int createShader(const std::string& text, GLenum shaderType) {
+        unsigned int shader = glCreateShader(shaderType);
+        
+        const char* shaderSourceStrings[1] = {text.c_str()};
+        const int shaderSourceInputLengths[1] = {text.length()};
+        glShaderSource(shader, 1, shaderSourceStrings, shaderSourceInputLengths);
+        glCompileShader(shader);
+
+        return shader;
+    }
+
+    Shader(const std::string& fileName) {
         program = glCreateProgram();
+        shaders[0] = createShader(loadShader(fileName + ".vrts"), GL_VERTEX_SHADER);
+        shaders[1] = createShader(loadShader(fileName + ".frgs"), GL_FRAGMENT_SHADER);
+        
+        for(unsigned int i = 0; i < NUM_SHADERS; i++)
+            glAttachShader(program, shaders[i]);
+
+        glBindAttribLocation(program, 0, "position");
+        glLinkProgram(program);
     }
 
     ~Shader() {
+        for(unsigned int i = 0; i < NUM_SHADERS; i++) {
+            glDetachShader(program, shaders[i]);
+            glDeleteShader(shaders[i]);
+        }
+
         glDeleteProgram(program);
-    }
-    
-    void bind() {
-        
     }
 
     unsigned int program;
