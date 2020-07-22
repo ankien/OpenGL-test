@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
@@ -6,6 +7,8 @@
 
 struct Shader {
     static const unsigned int NUM_SHADERS = 2;
+    unsigned int program;
+    unsigned int shaders[NUM_SHADERS];
 
     static std::string loadShader(const std::string& fileName) {
         std::fstream fileStream(fileName, std::ios::binary | std::ios::in);
@@ -35,6 +38,10 @@ struct Shader {
         return shader;
     }
 
+    void bind() {
+        glUseProgram(program);
+    }
+
     Shader(const std::string& fileName) {
         program = glCreateProgram();
         shaders[0] = createShader(loadShader(fileName + ".vrts"), GL_VERTEX_SHADER);
@@ -55,7 +62,4 @@ struct Shader {
 
         glDeleteProgram(program);
     }
-
-    unsigned int program;
-    unsigned int shaders[NUM_SHADERS];
 };
