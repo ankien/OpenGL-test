@@ -35,14 +35,17 @@ int main() {
     GLenum status = glewInit();
     
     /// stuff to draw
-    Shader shader("./shaders/myShader");
+    Shader shader("./shaders/myShader"); // load shaders
 
-    glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.2f, 1.0f); // set bg color
 
-    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0)),
-                           Vertex(glm::vec3(0,0.5,0)),
-                           Vertex(glm::vec3(0.5,-0.5,0)) };
+    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0), glm::vec3(1.0,0.0,0.0)),
+                           Vertex(glm::vec3(0,0.5,0), glm::vec3(0.0,1.0,0.0)),
+                           Vertex(glm::vec3(0.5,-0.5,0), glm::vec3(0.0,0.0,1.0)) };
+
     Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
+
+    bool fillMode = true; // polygon rendering mode
     ///
     
     /// event/control variables
@@ -66,7 +69,9 @@ int main() {
             state = SDL_GetKeyboardState(NULL);
             if(event.type == SDL_KEYDOWN) {
                 if(state[SDL_SCANCODE_ESCAPE]) exit = true;
-                if(state[SDL_SCANCODE_LALT] && state[SDL_SCANCODE_RETURN]) toggleFullscreen(window);
+                if((state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT]) && state[SDL_SCANCODE_RETURN]) toggleFullscreen(window);
+                if(state[SDL_SCANCODE_F] && fillMode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE), fillMode = false;
+                else if(state[SDL_SCANCODE_F] && !fillMode) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL), fillMode = true;
             }
         }
     }

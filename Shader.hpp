@@ -50,7 +50,6 @@ struct Shader {
         for(unsigned int i = 0; i < NUM_SHADERS; i++)
             glAttachShader(program, shaders[i]);
 
-        glBindAttribLocation(program, 0, "position");
         glLinkProgram(program);
     }
 

@@ -4,11 +4,13 @@
 #include <GL/glew.h>
 
 struct Vertex {
-        Vertex(const glm::vec3& pos) {
-            this->pos = pos;
-        }
-        glm::vec3 pos;
-    };
+    glm::vec3 pos;
+    glm::vec3 color;
+    Vertex(const glm::vec3& pos, const glm::vec3& color) {
+        this->pos = pos;
+        this->color = color;
+    }
+};
 
 struct Mesh {
     enum {
@@ -36,7 +38,10 @@ struct Mesh {
         glBufferData(GL_ARRAY_BUFFER, numOfVertices * sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0); // first attribute of Vertex
-        glVertexAttribPointer(0,3,GL_FLOAT,false,0,0);
+        glVertexAttribPointer(0,3,GL_FLOAT,false,6*sizeof(float),0);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1,3,GL_FLOAT,false,6*sizeof(float),(void*)(3*sizeof(float)));
 
         glBindVertexArray(0); // unbind
     }
