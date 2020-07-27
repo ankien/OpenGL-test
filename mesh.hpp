@@ -6,9 +6,11 @@
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
-    Vertex(const glm::vec3& pos, const glm::vec3& color) {
+    glm::vec2 texture;
+    Vertex(const glm::vec3& pos, const glm::vec3& color, const glm::vec2& texture) {
         this->pos = pos;
         this->color = color;
+        this->texture = texture;
     }
 };
 
@@ -38,10 +40,13 @@ struct Mesh {
         glBufferData(GL_ARRAY_BUFFER, numOfVertices * sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0); // first attribute of Vertex
-        glVertexAttribPointer(0,3,GL_FLOAT,false,6*sizeof(float),0);
+        glVertexAttribPointer(0,3,GL_FLOAT,false,8*sizeof(float),0);
 
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1,3,GL_FLOAT,false,6*sizeof(float),(void*)(3*sizeof(float)));
+        glVertexAttribPointer(1,3,GL_FLOAT,false,8*sizeof(float),(void*)(3*sizeof(float)));
+
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2,2,GL_FLOAT,false,8*sizeof(float),(void*)(6*sizeof(float)));
 
         glBindVertexArray(0); // unbind
     }

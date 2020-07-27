@@ -1,6 +1,7 @@
 #include "SDL.h"
 #include "shader.hpp"
 #include "mesh.hpp"
+#include "texture.hpp"
 
 void toggleFullscreen(SDL_Window* window) {
     uint32_t fullscreenFlag = SDL_WINDOW_FULLSCREEN;
@@ -26,8 +27,8 @@ int main() {
         SDL_WINDOWPOS_CENTERED, 
         SDL_WINDOWPOS_CENTERED, 
         1280, 
-        720, 
-        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+        960, 
+        SDL_WINDOW_OPENGL
     );
 
     SDL_GLContext glContext = SDL_GL_CreateContext(window);
@@ -35,14 +36,23 @@ int main() {
     GLenum status = glewInit();
     
     /// stuff to draw
-    Shader shader("./shaders/myShader"); // load shaders
+    Shader shader("./shaders/myShader");     // load shaders
+
+    Texture texture("./textures/rice.jpg");  // load textures
+    Texture texture2("./textures/star.png"); //
+
+    shader.bind();
+    glUniform1i(glGetUniformLocation(shader.program,"ourTexture"),0);
+    glUniform1i(glGetUniformLocation(shader.program,"ourTexture2"),1);
 
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f); // set bg color
 
-    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0), glm::vec3(1.0,0.0,0.0)),
-                           Vertex(glm::vec3(0,0.5,0), glm::vec3(0.0,1.0,0.0)),
-                           Vertex(glm::vec3(0.5,-0.5,0), glm::vec3(0.0,0.0,1.0)) };
+    // triangle vertices  // Position                    // Color                // Texture mapping; Top - (0,0), Bottom right - (1,1)
+    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0), glm::vec3(1.0,0.0,0.0), glm::vec2(   0, 1.0)),
+                          Vertex(glm::vec3(   0, 0.5,0), glm::vec3(0.0,1.0,0.0), glm::vec2( 0.5,   0)),
+                          Vertex(glm::vec3( 0.5,-0.5,0), glm::vec3(0.0,0.0,1.0), glm::vec2( 1.0, 1.0)) };
 
+    // establish mesh
     Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
 
     bool fillMode = true; // polygon rendering mode
@@ -60,6 +70,10 @@ int main() {
             glClear(GL_COLOR_BUFFER_BIT);
 
             shader.bind();
+
+            texture.bind(0);
+            texture2.bind(1);
+
             mesh.draw();
 
             SDL_GL_SwapWindow(window);
