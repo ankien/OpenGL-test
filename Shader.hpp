@@ -4,11 +4,18 @@
 #include <fstream>
 #include <GL/glew.h>
 #include <string>
+#include "transform.hpp"
 
 struct Shader {
+    enum {
+        TRANSFORM_U,
+        NUM_UNIFORMS
+    };
+
     static const unsigned int NUM_SHADERS = 2;
     unsigned int program;
     unsigned int shaders[NUM_SHADERS];
+    unsigned int uniforms[NUM_UNIFORMS];
 
     static std::string loadShader(const std::string& fileName) {
         std::fstream fileStream(fileName, std::ios::binary | std::ios::in);
@@ -42,6 +49,11 @@ struct Shader {
         glUseProgram(program);
     }
 
+    void update(const Transform& transform) {
+        glm::mat4 model = transform.getModel();
+        glUniformMatrix4fv(uniforms[TRANSFORM_U],1,false,&model[0][0]);
+    }
+
     Shader(const std::string& fileName) {
         program = glCreateProgram();
         shaders[0] = createShader(loadShader(fileName + ".vrts"), GL_VERTEX_SHADER);
@@ -51,6 +63,8 @@ struct Shader {
             glAttachShader(program, shaders[i]);
 
         glLinkProgram(program);
+
+        uniforms[TRANSFORM_U] = glGetUniformLocation(program,"transform");
     }
 
     ~Shader() {

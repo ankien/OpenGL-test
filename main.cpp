@@ -13,6 +13,9 @@ void toggleFullscreen(SDL_Window* window) {
 #undef main // because SDL has a main macro for initialization for some reason
 
 int main() {
+    static const int WIDTH  = 1280;
+    static const int HEIGHT =  720;
+
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -26,8 +29,8 @@ int main() {
         "OpenGL Test", 
         SDL_WINDOWPOS_CENTERED, 
         SDL_WINDOWPOS_CENTERED, 
-        1280, 
-        960, 
+        WIDTH, 
+        HEIGHT, 
         SDL_WINDOW_OPENGL
     );
 
@@ -35,49 +38,61 @@ int main() {
 
     GLenum status = glewInit();
     
-    /// stuff to draw
+    /* stuff to draw */
     Shader shader("./shaders/myShader");     // load shaders
 
     Texture texture("./textures/rice.jpg");  // load textures
-    Texture texture2("./textures/star.png"); //
+    Texture texture2("./textures/star.png");
 
-    shader.bind();
+    shader.bind(); // assign location values for multiple textures in fragment shader
     glUniform1i(glGetUniformLocation(shader.program,"ourTexture"),0);
     glUniform1i(glGetUniformLocation(shader.program,"ourTexture2"),1);
 
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f); // set bg color
 
     // triangle vertices  // Position                    // Color                // Texture mapping; Top - (0,0), Bottom right - (1,1)
-    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0), glm::vec3(1.0,0.0,0.0), glm::vec2(   0, 1.0)),
-                          Vertex(glm::vec3(   0, 0.5,0), glm::vec3(0.0,1.0,0.0), glm::vec2( 0.5,   0)),
-                          Vertex(glm::vec3( 0.5,-0.5,0), glm::vec3(0.0,0.0,1.0), glm::vec2( 1.0, 1.0)) };
+    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0.0), glm::vec3(1.0,0.0,0.0), glm::vec2( 0.0,1.0)),
+                          Vertex(glm::vec3( 0.0, 0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2( 0.5,0.0)),
+                          Vertex(glm::vec3( 0.5,-0.5,0.0), glm::vec3(0.0,0.0,1.0), glm::vec2( 1.0,1.0)) };
 
     // establish mesh
     Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
 
+    Transform transform; // call default transform constructor
+    double counter = 0.0;
+
     bool fillMode = true; // polygon rendering mode
-    ///
+    /******************/
     
-    /// event/control variables
+    /* event/control variables */
     bool exit = false;
     const uint8_t* state;
     SDL_Event event;
-    ///
+    /***************************/
 
-    while(!exit){ // draw loop
+    uint32_t debug = 0;
+
+    while(!exit){ // draw before event handling because SDL pauses everything after
         glUseProgram(shader.program);
-        while(SDL_PollEvent(&event)) { // update display
-            glClear(GL_COLOR_BUFFER_BIT);
 
-            shader.bind();
+        glClear(GL_COLOR_BUFFER_BIT);
 
-            texture.bind(0);
-            texture2.bind(1);
+        transform.pos.x = sinf(counter);
+        transform.pos.y = sinf(counter);
+        counter += 0.01;
 
-            mesh.draw();
+        shader.bind();
 
-            SDL_GL_SwapWindow(window);
+        shader.update(transform);
 
+        texture.bind(0);
+        texture2.bind(1);
+
+        mesh.draw();
+
+        SDL_GL_SwapWindow(window);
+
+        while(SDL_PollEvent(&event)) { // handle events
             if(event.type == SDL_QUIT) exit = true;
 
             state = SDL_GetKeyboardState(NULL);
