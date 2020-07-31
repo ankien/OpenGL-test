@@ -5,10 +5,12 @@
 #include <GL/glew.h>
 #include <string>
 #include "transform.hpp"
+#include "camera.hpp"
 
 struct Shader {
     enum {
         TRANSFORM_U,
+        // can add more TRANSFORM_U's
         NUM_UNIFORMS
     };
 
@@ -49,22 +51,23 @@ struct Shader {
         glUseProgram(program);
     }
 
-    void update(const Transform& transform) {
-        glm::mat4 model = transform.getModel();
+    void update(const Transform& transform, const Camera& camera) {
+        glm::mat4 model = camera.getViewProjection() * transform.getModel();
         glUniformMatrix4fv(uniforms[TRANSFORM_U],1,false,&model[0][0]);
     }
 
     Shader(const std::string& fileName) {
-        program = glCreateProgram();
-        shaders[0] = createShader(loadShader(fileName + ".vrts"), GL_VERTEX_SHADER);
-        shaders[1] = createShader(loadShader(fileName + ".frgs"), GL_FRAGMENT_SHADER);
+        this->program = glCreateProgram();
+        this->shaders[0] = createShader(loadShader(fileName + ".vrts"), GL_VERTEX_SHADER);
+        this->shaders[1] = createShader(loadShader(fileName + ".frgs"), GL_FRAGMENT_SHADER);
         
         for(unsigned int i = 0; i < NUM_SHADERS; i++)
             glAttachShader(program, shaders[i]);
 
         glLinkProgram(program);
 
-        uniforms[TRANSFORM_U] = glGetUniformLocation(program,"transform");
+        // links the shader to a uniform transform
+        this->uniforms[TRANSFORM_U] = glGetUniformLocation(program,"transform");
     }
 
     ~Shader() {

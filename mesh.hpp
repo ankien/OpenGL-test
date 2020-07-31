@@ -7,11 +7,11 @@ struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
     glm::vec2 texture;
-    Vertex(const glm::vec3& pos, const glm::vec3& color, const glm::vec2& texture) {
-        this->pos = pos;
-        this->color = color;
-        this->texture = texture;
-    }
+    Vertex(const glm::vec3& pos, const glm::vec3& color, const glm::vec2& texture) :
+        pos(pos),
+        color(color),
+        texture(texture)
+    {}
 };
 
 struct Mesh {
@@ -19,6 +19,7 @@ struct Mesh {
         POSITION_VB,
         NUM_BUFFERS
     };
+
     unsigned int vertexArray;
     unsigned int vertexArrayBuffers[NUM_BUFFERS];
     unsigned int drawCount;
@@ -30,7 +31,7 @@ struct Mesh {
     }
 
     Mesh(Vertex* vertices, unsigned int numOfVertices) {
-        drawCount = numOfVertices;
+        this->drawCount = numOfVertices;
 
         glGenVertexArrays(1,&vertexArray);
         glBindVertexArray(vertexArray);

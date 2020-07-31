@@ -2,6 +2,7 @@
 #include "shader.hpp"
 #include "mesh.hpp"
 #include "texture.hpp"
+#include "camera.hpp"
 
 void toggleFullscreen(SDL_Window* window) {
     uint32_t fullscreenFlag = SDL_WINDOW_FULLSCREEN;
@@ -38,7 +39,7 @@ int main() {
 
     GLenum status = glewInit();
     
-    /* stuff to draw */
+    /** stuff to draw **/
     Shader shader("./shaders/myShader");     // load shaders
 
     Texture texture("./textures/rice.jpg");  // load textures
@@ -55,20 +56,23 @@ int main() {
                           Vertex(glm::vec3( 0.0, 0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2( 0.5,0.0)),
                           Vertex(glm::vec3( 0.5,-0.5,0.0), glm::vec3(0.0,0.0,1.0), glm::vec2( 1.0,1.0)) };
 
-    // establish mesh
+    // establish meshes
     Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
 
     Transform transform; // call default transform constructor
-    double counter = 0.0;
+    float counter = 0.0f;
+
+    // enable camera controls + view mode
+    Camera camera(70.0f,WIDTH,HEIGHT,0.1f,100.0f,false);
 
     bool fillMode = true; // polygon rendering mode
-    /******************/
+    /********************/
     
-    /* event/control variables */
+    /* event/control *
+     * variables     */
     bool exit = false;
     const uint8_t* state;
     SDL_Event event;
-    /***************************/
 
     uint32_t debug = 0;
 
@@ -77,13 +81,12 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        transform.pos.x = sinf(counter);
-        transform.pos.y = sinf(counter);
-        counter += 0.01;
+        transform.rot.y = transform.rot.z = counter * 2;
+        counter += 0.01f;
 
         shader.bind();
 
-        shader.update(transform);
+        shader.update(transform, camera);
 
         texture.bind(0);
         texture2.bind(1);
