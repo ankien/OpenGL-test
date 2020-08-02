@@ -10,7 +10,7 @@
 struct Shader {
     enum {
         TRANSFORM_U,
-        // can add more TRANSFORM_U's
+        // can add more Transform uniforms
         NUM_UNIFORMS
     };
 

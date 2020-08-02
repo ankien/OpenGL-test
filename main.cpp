@@ -36,7 +36,6 @@ int main() {
     );
 
     SDL_GLContext glContext = SDL_GL_CreateContext(window);
-
     GLenum status = glewInit();
 
     glEnable(GL_DEPTH_TEST);
@@ -53,7 +52,7 @@ int main() {
 
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f); // set bg color
 
-    // Could probably create a vector of these
+    // Could probably create a vector of these to add models at runtime.
     // triangle vertices  // Position                    // Color                // Texture mapping; Top Left - (0,0), Bottom Right - (1,1)
     Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0)),
                           Vertex(glm::vec3(0.0,0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0)), // Face
@@ -93,7 +92,7 @@ int main() {
     float counter = 0.0f;
 
     // enable camera controls + view mode
-    Camera camera(glm::vec3(0.0f,0.0f,-6.0f),70.0f,WIDTH,HEIGHT,0.1f,100.0f,true);
+    Camera camera(glm::vec3(0.0f,0.0f,-6.0f),70.0f,WIDTH,HEIGHT,0.1f,100.0f,false);
 
     bool fillMode = true; // polygon rendering mode
     /********************/
