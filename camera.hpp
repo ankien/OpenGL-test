@@ -37,7 +37,7 @@ struct Camera {
     
     Camera(glm::vec3 pos, float fovDeg, uint16_t width, uint16_t height, float near, float far, bool orthoMode) {
         if(orthoMode) {
-            this->projection = glm::ortho(0.0f,(float)width,0.0f,(float)height,near,far); // currently broken
+            this->projection = glm::ortho(0.0f,(float)width/(float)height,0.0f,1.0f,0.0f-near,far);
         } else {
             this->projection = glm::perspective(glm::radians(fovDeg),(float)width/(float)height,near,far);
         }

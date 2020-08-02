@@ -93,7 +93,7 @@ int main() {
     float counter = 0.0f;
 
     // enable camera controls + view mode
-    Camera camera(glm::vec3(0.0f,0.0f,-6.0f),70.0f,WIDTH,HEIGHT,0.1f,100.0f,false);
+    Camera camera(glm::vec3(0.0f,0.0f,-6.0f),70.0f,WIDTH,HEIGHT,0.1f,100.0f,true);
 
     bool fillMode = true; // polygon rendering mode
     /********************/
