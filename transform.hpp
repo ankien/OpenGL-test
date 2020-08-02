@@ -21,9 +21,9 @@ struct Transform {
         return posMatrix * rotMatrix * scaleMatrix;
     }
 
-    Transform(const glm::vec3& pos = glm::vec3(), const glm::vec3& rot = glm::vec3(), const glm::vec3& scale = glm::vec3(1.0,1.0,1.0)) :
-        pos(pos),
-        rot(rot),
-        scale(scale)
-    {}
+     Transform(const glm::vec3& pos = glm::vec3(), const glm::vec3& rot = glm::vec3(), const glm::vec3& scale = glm::vec3(1.0, 1.0, 1.0)) {
+        this->pos=pos;
+        this->rot=rot;
+        this->scale=scale;
+     }
 };

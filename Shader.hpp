@@ -52,7 +52,7 @@ struct Shader {
     }
 
     void update(const Transform& transform, const Camera& camera) {
-        glm::mat4 model = camera.getViewProjection() * transform.getModel();
+        glm::mat4 model = camera.getViewProjection() * transform.getModel(); // MVP
         glUniformMatrix4fv(uniforms[TRANSFORM_U],1,false,&model[0][0]);
     }
 
