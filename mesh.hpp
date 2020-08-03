@@ -17,14 +17,9 @@ struct Vertex {
 };
 
 struct Mesh {
-    enum { // Buffers
-        POSITION_VB,
-        // Can add index buffer to draw less vertices
-        NUM_BUFFERS
-    };
-
+    static const uint8_t NUM_BUFFERS = 4;
     unsigned int vertexArray; // VAO
-    unsigned int vertexArrayBuffers[NUM_BUFFERS];
+    unsigned int vertexArrayBuffers[NUM_BUFFERS]; // VBO
     unsigned int drawCount;
 
     void draw() {
@@ -40,11 +35,11 @@ struct Mesh {
         glBindVertexArray(vertexArray);
 
         glGenBuffers(NUM_BUFFERS,vertexArrayBuffers);
-        glBindBuffer(GL_ARRAY_BUFFER,vertexArrayBuffers[POSITION_VB]);
+
+        glBindBuffer(GL_ARRAY_BUFFER,vertexArrayBuffers[0]);
         glBufferData(GL_ARRAY_BUFFER, numOfVertices * sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(0); // first attribute position of Vertex, different method from other atttributes
-                                      // this method is prefered, but I'm lazy :P
+        glEnableVertexAttribArray(0);
         glVertexAttribPointer(0,3,GL_FLOAT,false,11*sizeof(float),0);
 
         glEnableVertexAttribArray(1); // color

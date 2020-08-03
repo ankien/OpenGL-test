@@ -10,14 +10,14 @@
 struct Shader {
     enum {
         TRANSFORM_U,
-        // can add more Transform uniforms
+        // can add more uniforms from shaders
         NUM_UNIFORMS
     };
 
     static const unsigned int NUM_SHADERS = 2;
     unsigned int program;
     unsigned int shaders[NUM_SHADERS];
-    unsigned int uniforms[NUM_UNIFORMS];
+    unsigned int uniforms[NUM_UNIFORMS]; // # not including textures since they don't need to be updated
 
     static std::string loadShader(const std::string& fileName) {
         std::fstream fileStream(fileName, std::ios::binary | std::ios::in);
