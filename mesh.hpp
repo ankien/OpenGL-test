@@ -23,7 +23,7 @@ struct Mesh {
         NUM_BUFFERS
     };
 
-    unsigned int vertexArray;
+    unsigned int vertexArray; // VAO
     unsigned int vertexArrayBuffers[NUM_BUFFERS];
     unsigned int drawCount;
 
@@ -43,16 +43,18 @@ struct Mesh {
         glBindBuffer(GL_ARRAY_BUFFER,vertexArrayBuffers[POSITION_VB]);
         glBufferData(GL_ARRAY_BUFFER, numOfVertices * sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(0); // first attribute of Vertex, different method from other atttributes
-        glVertexAttribPointer(0,3,GL_FLOAT,false,8*sizeof(float),0);
+        glEnableVertexAttribArray(0); // first attribute position of Vertex, different method from other atttributes
+                                      // this method is prefered, but I'm lazy :P
+        glVertexAttribPointer(0,3,GL_FLOAT,false,11*sizeof(float),0);
 
-        glEnableVertexAttribArray(1); // preferred method
-        glVertexAttribPointer(1,3,GL_FLOAT,false,8*sizeof(float),(void*)(3*sizeof(float)));
+        glEnableVertexAttribArray(1); // color
+        glVertexAttribPointer(1,3,GL_FLOAT,false,11*sizeof(float),(void*)(3*sizeof(float)));
 
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2,2,GL_FLOAT,false,8*sizeof(float),(void*)(6*sizeof(float)));
+        glEnableVertexAttribArray(2); // texture
+        glVertexAttribPointer(2,2,GL_FLOAT,false,11*sizeof(float),(void*)(6*sizeof(float)));
 
-
+		glEnableVertexAttribArray(3); // normal
+		glVertexAttribPointer(3,3,GL_FLOAT,false,11*sizeof(float),(void*)(8*sizeof(float)));
 
         glBindVertexArray(0); // unbind
     }

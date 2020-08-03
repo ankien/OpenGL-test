@@ -53,7 +53,7 @@ int main() {
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f); // set bg color
 
     // Could probably create a vector of these to add models at runtime.
-    // triangle vertices  // Position                    // Color                // Texture mapping; Top Left - (0,0), Bottom Right - (1,1)
+    // triangle vertices  // Position, Color, Texture mapping; Top Left - (0,0), Bottom Right - (1,1), Normal
     Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0)),
                           Vertex(glm::vec3(0.0,0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0)), // Face
                           Vertex(glm::vec3(0.5,-0.5,0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0)),
@@ -120,7 +120,6 @@ int main() {
             transform[i].rot.y = transform[i].rot.z = counter;
             mesh.draw();
         }
-        
 
         SDL_GL_SwapWindow(window);
 
