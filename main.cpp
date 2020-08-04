@@ -42,13 +42,16 @@ int main() {
     
     /** stuff to draw **/
     Shader shader("./shaders/myShader");     // load shaders
+    Shader lightShader("./shaders/lightShader");
 
     Texture texture("./textures/rice.jpg");  // load textures
     Texture texture2("./textures/star.png");
 
-    shader.bind(); // assign location values for multiple textures in fragment shader
+    shader.use();
     glUniform1i(glGetUniformLocation(shader.program,"ourTexture"),0);
     glUniform1i(glGetUniformLocation(shader.program,"ourTexture2"),1);
+
+    lightShader.use();
 
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f); // set bg color
 
@@ -83,12 +86,18 @@ int main() {
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
+    // light
+    glm::vec3 lightColor(1,1,1);
+    glm::vec3 lightPos(-1,1,-5);
+    Transform light(lightPos);
+
     // establish meshes
     Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
 
     Transform transform[10];
     for(uint8_t i = 0; i < 10; i++)
         transform[i] = Transform(pyramidPositions[i],glm::vec3(1,1,1),glm::vec3(1,1,1));
+
     float counter = 0.0f;
 
     // enable camera controls + view mode
@@ -104,22 +113,25 @@ int main() {
     SDL_Event event;
 
     while(!exit){ // draw before event handling because SDL pauses everything after
-        glUseProgram(shader.program);
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         counter += 0.01f;
-
-        shader.bind();
-
+        
         texture.bind(0);
         texture2.bind(1);
 
+        shader.use(); // use shader, update pos, then draw
+
         for(uint8_t i = 0; i < 10; i++) {
-            shader.update(transform[i], camera);
+            shader.update(transform[i], camera, lightColor);
             transform[i].rot.y = transform[i].rot.z = counter;
-            mesh.draw();
+            mesh.draw(mesh.vertexArray);
         }
+        
+        lightShader.use();
+        lightShader.update(lightPos,camera,glm::vec3(1,1,1));
+        lightPos.y = sinf(counter * 2);
+        mesh.draw(mesh.lightVertexArray);
 
         SDL_GL_SwapWindow(window);
 

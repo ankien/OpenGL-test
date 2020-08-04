@@ -18,14 +18,14 @@ struct Vertex {
 
 struct Mesh {
     static const uint8_t NUM_BUFFERS = 4;
-    unsigned int vertexArray; // VAO
+    unsigned int vertexArray; // VAOs
+    unsigned int lightVertexArray;
     unsigned int vertexArrayBuffers[NUM_BUFFERS]; // VBO
     unsigned int drawCount;
 
-    void draw() {
-        glBindVertexArray(vertexArray);
+    void draw(const unsigned int& AO) {
+        glBindVertexArray(AO);
         glDrawArrays(GL_TRIANGLES,0,drawCount);
-        glBindVertexArray(0);
     }
 
     Mesh(Vertex* vertices, unsigned int numOfVertices) {
@@ -33,13 +33,11 @@ struct Mesh {
 
         glGenVertexArrays(1,&vertexArray);
         glBindVertexArray(vertexArray);
-
         glGenBuffers(NUM_BUFFERS,vertexArrayBuffers);
-
         glBindBuffer(GL_ARRAY_BUFFER,vertexArrayBuffers[0]);
         glBufferData(GL_ARRAY_BUFFER, numOfVertices * sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(0); // position
         glVertexAttribPointer(0,3,GL_FLOAT,false,11*sizeof(float),0);
 
         glEnableVertexAttribArray(1); // color
@@ -51,7 +49,20 @@ struct Mesh {
 		glEnableVertexAttribArray(3); // normal
 		glVertexAttribPointer(3,3,GL_FLOAT,false,11*sizeof(float),(void*)(8*sizeof(float)));
 
-        glBindVertexArray(0); // unbind
+        glGenVertexArrays(1,&lightVertexArray);
+        glBindVertexArray(lightVertexArray);
+
+        glEnableVertexAttribArray(0); // position
+        glVertexAttribPointer(0,3,GL_FLOAT,false,11*sizeof(float),0);
+
+        glEnableVertexAttribArray(1); // color
+        glVertexAttribPointer(1,3,GL_FLOAT,false,11*sizeof(float),(void*)(3*sizeof(float)));
+
+        glEnableVertexAttribArray(2); // texture
+        glVertexAttribPointer(2,2,GL_FLOAT,false,11*sizeof(float),(void*)(6*sizeof(float)));
+
+		glEnableVertexAttribArray(3); // normal
+		glVertexAttribPointer(3,3,GL_FLOAT,false,11*sizeof(float),(void*)(8*sizeof(float)));
     }
 
     ~Mesh() {

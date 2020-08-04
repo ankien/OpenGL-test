@@ -10,11 +10,12 @@
 struct Shader {
     enum {
         TRANSFORM_U,
+        LIGHTCOLOR_U,
         // can add more uniforms from shaders
         NUM_UNIFORMS
     };
 
-    static const unsigned int NUM_SHADERS = 2;
+    static const unsigned int NUM_SHADERS = 2; // how many type of shaders for each object/surface? (geometry,vertex,etc.)
     unsigned int program;
     unsigned int shaders[NUM_SHADERS];
     unsigned int uniforms[NUM_UNIFORMS]; // # not including textures since they don't need to be updated
@@ -47,13 +48,14 @@ struct Shader {
         return shader;
     }
 
-    void bind() {
+    void use() {
         glUseProgram(program);
     }
 
-    void update(const Transform& transform, const Camera& camera) {
+    void update(const Transform& transform, const Camera& camera, glm::vec3 lightColor) {
         glm::mat4 model = camera.getViewProjection() * transform.getModel(); // MVP
         glUniformMatrix4fv(uniforms[TRANSFORM_U],1,false,&model[0][0]);
+        glUniform3fv(uniforms[LIGHTCOLOR_U],1,&lightColor[0]);
     }
 
     Shader(const std::string& fileName) {
@@ -66,8 +68,8 @@ struct Shader {
 
         glLinkProgram(program);
 
-        // links the shader to a uniform transform
         this->uniforms[TRANSFORM_U] = glGetUniformLocation(program,"transform");
+        this->uniforms[LIGHTCOLOR_U] = glGetUniformLocation(program, "lightColor");
     }
 
     ~Shader() {
