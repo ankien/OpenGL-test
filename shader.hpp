@@ -11,6 +11,8 @@ struct Shader {
     enum {
         TRANSFORM_U,
         LIGHTCOLOR_U,
+        LIGHTPOS_U,
+        MODEL_U,
         // can add more uniforms from shaders
         NUM_UNIFORMS
     };
@@ -52,10 +54,13 @@ struct Shader {
         glUseProgram(program);
     }
 
-    void update(const Transform& transform, const Camera& camera, glm::vec3 lightColor) {
-        glm::mat4 model = camera.getViewProjection() * transform.getModel(); // MVP
-        glUniformMatrix4fv(uniforms[TRANSFORM_U],1,false,&model[0][0]);
+    void update(const Transform& transform, const Camera& camera, const glm::vec3& lightColor, const glm::vec3& lightPos) {
+        glm::mat4 mvp = camera.getViewProjection() * transform.getModel(); // MVP
+        glm::mat4 model = transform.getModel();
+        glUniformMatrix4fv(uniforms[TRANSFORM_U],1,false,&mvp[0][0]);
         glUniform3fv(uniforms[LIGHTCOLOR_U],1,&lightColor[0]);
+        glUniform3fv(uniforms[LIGHTPOS_U],1,&lightPos[0]);
+        glUniformMatrix4fv(uniforms[MODEL_U],1,false,&model[0][0]);
     }
 
     Shader(const std::string& fileName) {
@@ -70,6 +75,8 @@ struct Shader {
 
         this->uniforms[TRANSFORM_U] = glGetUniformLocation(program,"transform");
         this->uniforms[LIGHTCOLOR_U] = glGetUniformLocation(program, "lightColor");
+        this->uniforms[LIGHTPOS_U] = glGetUniformLocation(program,"lightPos");
+        this->uniforms[MODEL_U] = glGetUniformLocation(program,"model");
     }
 
     ~Shader() {

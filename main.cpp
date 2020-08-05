@@ -56,22 +56,22 @@ int main() {
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f); // set bg color
 
     // Could probably create a vector of these to add models at runtime.
-    // triangle vertices  // Position, Color, Texture mapping; Top Left - (0,0), Bottom Right - (1,1), Normal
-    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0)),
-                          Vertex(glm::vec3(0.0,0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0)), // Face
-                          Vertex(glm::vec3(0.5,-0.5,0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0)),
+    // Triangle vertice attributes: Position, Color, Texture mapping; Top Left - (0,0) Bottom Right - (1,1), Normal
+    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0), glm::vec3(0.0,0.25,-0.75)),
+                          Vertex(glm::vec3(0.0,0.5,0.0), glm::vec3(1.0,0.0,0.0), glm::vec2(0.5,0.0), glm::vec3(0.0,0.25,-0.75)), // Face
+                          Vertex(glm::vec3(0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(1.0,1.0), glm::vec3(0.0,0.25,-0.75)),
                           
-                          Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0)),
-                          Vertex(glm::vec3(0.0, 0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0)), // Left Face
-                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0)),
+                          Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(0.0,1.0,0.0), glm::vec2(0.0,1.0), glm::vec3(-0.25,0.25,0.5)),
+                          Vertex(glm::vec3(0.0, 0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0), glm::vec3(-0.25,0.25,0.5)), // Left Face
+                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,1.0,0.0), glm::vec2(1.0,1.0), glm::vec3(-0.25,0.25,0.5)),
                           
-                          Vertex(glm::vec3(0.5,-0.5, 0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0)),
-                          Vertex(glm::vec3(0.0, 0.5, 0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0)), // Right Face
-                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0)),
+                          Vertex(glm::vec3(0.5,-0.5, 0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(0.0,1.0), glm::vec3(0.25,0.25,0.5)),
+                          Vertex(glm::vec3(0.0, 0.5, 0.0), glm::vec3(0.0,0.0,1.0), glm::vec2(0.5,0.0), glm::vec3(0.25,0.25,0.5)), // Right Face
+                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0), glm::vec3(0.25,0.25,0.5)),
                           
-                          Vertex(glm::vec3(-0.5,-0.5, 0.5), glm::vec3(1.0,0.0,0.0), glm::vec2( 0.0,1.0)),
-                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0)), // Bottom Face
-                          Vertex(glm::vec3(0.5,-0.5, 0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0))};
+                          Vertex(glm::vec3(-0.5,-0.5, 0.5), glm::vec3(1.0,1.0,1.0), glm::vec2( 0.0,1.0), glm::vec3(0.0,-1.0,0.0)),
+                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(1.0,1.0,1.0), glm::vec2(0.5,0.0), glm::vec3(0.0,-1.0,0.0)), // Bottom Face
+                          Vertex(glm::vec3(0.5,-0.5, 0.5), glm::vec3(1.0,1.0,1.0), glm::vec2(1.0,1.0), glm::vec3(0.0,-1.0,0.0))};
 
     glm::vec3 pyramidPositions[] = {
         glm::vec3(0.0f,  0.0f,  0.0f),
@@ -86,7 +86,7 @@ int main() {
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
-    // light
+    // phong light
     glm::vec3 lightColor(1,1,1);
     glm::vec3 lightPos(-1,1,-5);
     Transform light(lightPos);
@@ -123,13 +123,13 @@ int main() {
         shader.use(); // use shader, update pos, then draw
 
         for(uint8_t i = 0; i < 10; i++) {
-            shader.update(transform[i], camera, lightColor);
+            shader.update(transform[i],camera,lightColor,lightPos);
             transform[i].rot.y = transform[i].rot.z = counter;
             mesh.draw(mesh.vertexArray);
         }
         
         lightShader.use();
-        lightShader.update(lightPos,camera,glm::vec3(1,1,1));
+        lightShader.update(lightPos,camera,lightColor,lightPos);
         lightPos.y = sinf(counter * 2);
         mesh.draw(mesh.lightVertexArray);
 

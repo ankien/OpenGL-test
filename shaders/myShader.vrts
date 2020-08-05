@@ -3,14 +3,20 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 color;
 layout (location = 2) in vec2 texCoord;
+layout (location = 3) in vec3 normal;
 
 out vec3 triColor;
 out vec2 outTexCoord;
+out vec3 outNormal;
+out vec3 fragPos;
 
 uniform mat4 transform;
+uniform mat4 model;
 
 void main() {
     gl_Position = transform * vec4(position, 1.0);
-	triColor = color;
-	outTexCoord = texCoord;
+    triColor = color;
+    outTexCoord = texCoord;
+    outNormal = mat3(transpose(inverse(model))) * normal;
+    fragPos = vec3(model * vec4(position,1.0));
 }
