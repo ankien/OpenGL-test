@@ -57,17 +57,17 @@ int main() {
 
     // Could probably create a vector of these to add models at runtime.
     // Triangle vertice attributes: Position, Color, Texture mapping; Top Left - (0,0) Bottom Right - (1,1), Normal
-    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0), glm::vec3(0.0,0.25,-0.75)),
-                          Vertex(glm::vec3(0.0,0.5,0.0), glm::vec3(1.0,0.0,0.0), glm::vec2(0.5,0.0), glm::vec3(0.0,0.25,-0.75)), // Face
-                          Vertex(glm::vec3(0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(1.0,1.0), glm::vec3(0.0,0.25,-0.75)),
+    Vertex vertices[] = { Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(0.0,1.0), glm::vec3(0.0,0.75,0.75)),
+                          Vertex(glm::vec3(0.0,0.5,0.0), glm::vec3(1.0,0.0,0.0), glm::vec2(0.5,0.0), glm::vec3(0.0,0.75,0.75)), // Face
+                          Vertex(glm::vec3(0.5,-0.5,0.5), glm::vec3(1.0,0.0,0.0), glm::vec2(1.0,1.0), glm::vec3(0.0,0.75,0.75)),
                           
-                          Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(0.0,1.0,0.0), glm::vec2(0.0,1.0), glm::vec3(-0.25,0.25,0.5)),
-                          Vertex(glm::vec3(0.0, 0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0), glm::vec3(-0.25,0.25,0.5)), // Left Face
-                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,1.0,0.0), glm::vec2(1.0,1.0), glm::vec3(-0.25,0.25,0.5)),
+                          Vertex(glm::vec3(-0.5,-0.5,0.5), glm::vec3(0.0,1.0,0.0), glm::vec2(0.0,1.0), glm::vec3(-0.75,0.75,0.75)),
+                          Vertex(glm::vec3(0.0, 0.5,0.0), glm::vec3(0.0,1.0,0.0), glm::vec2(0.5,0.0), glm::vec3(-0.75,0.75,0.75)), // Left Face
+                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,1.0,0.0), glm::vec2(1.0,1.0), glm::vec3(-0.75,0.75,0.75)),
                           
-                          Vertex(glm::vec3(0.5,-0.5, 0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(0.0,1.0), glm::vec3(0.25,0.25,0.5)),
-                          Vertex(glm::vec3(0.0, 0.5, 0.0), glm::vec3(0.0,0.0,1.0), glm::vec2(0.5,0.0), glm::vec3(0.25,0.25,0.5)), // Right Face
-                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0), glm::vec3(0.25,0.25,0.5)),
+                          Vertex(glm::vec3(0.5,-0.5, 0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(0.0,1.0), glm::vec3(0.75,0.75,0.75)),
+                          Vertex(glm::vec3(0.0, 0.5, 0.0), glm::vec3(0.0,0.0,1.0), glm::vec2(0.5,0.0), glm::vec3(0.75,0.75,0.75)), // Right Face
+                          Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(0.0,0.0,1.0), glm::vec2(1.0,1.0), glm::vec3(0.75,0.75,0.75)),
                           
                           Vertex(glm::vec3(-0.5,-0.5, 0.5), glm::vec3(1.0,1.0,1.0), glm::vec2( 0.0,1.0), glm::vec3(0.0,-1.0,0.0)),
                           Vertex(glm::vec3(0.0,-0.5,-0.5), glm::vec3(1.0,1.0,1.0), glm::vec2(0.5,0.0), glm::vec3(0.0,-1.0,0.0)), // Bottom Face
@@ -96,7 +96,7 @@ int main() {
 
     Transform transform[10];
     for(uint8_t i = 0; i < 10; i++)
-        transform[i] = Transform(pyramidPositions[i],glm::vec3(1,1,1),glm::vec3(1,1,1));
+        transform[i] = Transform(pyramidPositions[i],glm::vec3(0,0,0),glm::vec3(1,1,1));
 
     float counter = 0.0f;
 

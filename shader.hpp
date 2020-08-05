@@ -13,6 +13,7 @@ struct Shader {
         LIGHTCOLOR_U,
         LIGHTPOS_U,
         MODEL_U,
+        VIEWPOS_U,
         // can add more uniforms from shaders
         NUM_UNIFORMS
     };
@@ -61,6 +62,7 @@ struct Shader {
         glUniform3fv(uniforms[LIGHTCOLOR_U],1,&lightColor[0]);
         glUniform3fv(uniforms[LIGHTPOS_U],1,&lightPos[0]);
         glUniformMatrix4fv(uniforms[MODEL_U],1,false,&model[0][0]);
+        glUniform3fv(uniforms[VIEWPOS_U],1,&camera.pos[0]);
     }
 
     Shader(const std::string& fileName) {
@@ -77,6 +79,7 @@ struct Shader {
         this->uniforms[LIGHTCOLOR_U] = glGetUniformLocation(program, "lightColor");
         this->uniforms[LIGHTPOS_U] = glGetUniformLocation(program,"lightPos");
         this->uniforms[MODEL_U] = glGetUniformLocation(program,"model");
+        this->uniforms[VIEWPOS_U] = glGetUniformLocation(program,"viewPos");
     }
 
     ~Shader() {
